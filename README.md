@@ -1,0 +1,1 @@
+# TypeScript-Search-Ranker\n\n## Overview\nEnterprise-grade search ranker implementation in TypeScript.\n\n## Quick Start (1-Click Build)\n\n```bash\ngit clone https://github.com/skylerblue333/TypeScript-Search-Ranker.git\ncd TypeScript-Search-Ranker\n# Build instructions depend on the language\n```\n
