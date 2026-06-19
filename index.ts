@@ -1,1 +1,0 @@
-console.log('Starting TypeScript-Search-Ranker service...');\n

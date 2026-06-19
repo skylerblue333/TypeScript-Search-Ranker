@@ -4,26 +4,38 @@ import { z } from 'zod';
 const app = express();
 app.use(express.json());
 
-const payloadSchema = z.object({
-  data: z.record(z.any()),
-  timestamp: z.number().optional()
+// BM25-inspired search ranking engine for document retrieval
+
+const searchSchema = z.object({
+  query: z.string().min(1),
+  documents: z.array(z.object({ id: z.string(), text: z.string() }))
 });
 
-app.post('/api/v1/process', (req, res) => {
+function score(query: string, text: string): number {
+  const terms = query.toLowerCase().split(' ');
+  const words = text.toLowerCase().split(' ');
+  return terms.reduce((acc, t) => acc + words.filter(w => w === t).length, 0);
+}
+
+app.post('/api/v1/rank', (req, res) => {
   try {
-    const validated = payloadSchema.parse(req.body);
-    res.json({ status: 'success', processed: validated.data });
+    const { query, documents } = searchSchema.parse(req.body);
+    const ranked = documents
+      .map(doc => ({ ...doc, score: score(query, doc.text) }))
+      .sort((a, b) => b.score - a.score);
+    res.json({ query, results: ranked });
   } catch (e) {
-    res.status(400).json({ error: 'Invalid payload schema' });
+    res.status(400).json({ error: 'Invalid search request' });
   }
 });
 
+
 app.get('/health', (req, res) => {
-  res.json({ status: 'healthy', version: '3.0.0' });
+  res.json({ status: 'healthy', service: 'TypeScript-Search-Ranker', version: '3.0.0' });
 });
 
 if (require.main === module) {
-  app.listen(8080, () => console.log('TypeScript-Search-Ranker running on port 8080'));
+  app.listen(8080, () => console.log('TypeScript-Search-Ranker running on :8080'));
 }
 
 export default app;
