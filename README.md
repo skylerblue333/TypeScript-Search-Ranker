@@ -1,44 +1,49 @@
-<!-- PORTFOLIO PROJECT PROFILE: maintained by the repository owner -->
+# Sky Search Ranker
 
-## Project profile and code-audit snapshot
+A deterministic TypeScript/Express ranking service for bounded document collections in the SKYCOIN4444 engineering portfolio.
 
-**What this is:** **TypeScript-Search-Ranker** is a public repository described as: “Enterprise-grade search ranker implementation in TypeScript. #SkyCoin4444 #AI #Blockchain #DevOps #Innovation” Its dominant language signals are **TypeScript (2 files), JavaScript (1 files)**.
+## Implemented
 
-**Why it has value:** Its value is best understood through the implementation evidence currently present in the repository: **18 tracked files** were observed in the shallow audit, with the source structure and existing documentation providing the project’s specific context. This README does not treat a prototype, experiment, or archive as a production system without supporting evidence.
+- `POST /api/v1/rank` with strict Zod validation.
+- Maximum 500 documents per request, 20,000 characters per document, 256-character queries, and 100 returned results.
+- Deterministic token-frequency/coverage scoring with stable tie ordering.
+- Explicit health and readiness endpoints.
+- Bounded JSON request bodies and disabled Express disclosure header.
+- Jest/Supertest tests for ranking behavior, stable ties, health/readiness, and invalid input.
+- TypeScript build, production dependency audit, non-root container build, and runtime smoke test in CI.
 
-**Implementation evidence:** 1 test-related file(s) detected; 1 dependency or package manifest(s) detected; 2 build/CI/infrastructure signal(s) detected; and 3 documentation or governance file(s) detected. Test filenames observed include `tests/index.test.ts`. Dependency or package files include `package.json`. Build, CI, or infrastructure signals include `Dockerfile`, `.github/workflows/ci.yml`.
+## Run locally
 
-**Current status:** The repository is tracked on the `main` branch. The existing source tree, configuration, tests, workflows, and documentation remain authoritative for supported behavior and maturity. A code audit is not a production-readiness certification, and the presence of a test or workflow file does not establish that all checks pass.
+```bash
+npm install
+npm run build
+npm test -- --runInBand
+npm start
+```
 
-**Relationship to the wider portfolio:** This repository is one focused component of the broader Skyler Blue Spillers portfolio across AI, software engineering, cloud and DevOps, cybersecurity, blockchain, finance, education, social systems, and creative work. It may provide a service boundary, implementation pattern, experiment, archive, or reusable idea for related repositories. Treat repositories as technical dependencies only where documented interfaces and verified project requirements support that relationship.
+Example request:
 
-**Quality and security note:** No obvious secret-like pattern was detected by the limited static scan; this is not a substitute for a security audit. No TODO/FIXME marker was detected in the scanned text files.
+```json
+{
+  "query": "golang performance",
+  "limit": 10,
+  "documents": [
+    {"id": "doc-1", "text": "golang services with strong performance"},
+    {"id": "doc-2", "text": "python application"}
+  ]
+}
+```
 
----
+## Product boundary
 
-# Typescript Search Ranker
+Status: **engineering beta**.
 
-![GitHub stars](https://img.shields.io/github/stars/skylerblue333/TypeScript-Search-Ranker?style=flat-square)
-![GitHub license](https://img.shields.io/github/license/skylerblue333/TypeScript-Search-Ranker?style=flat-square)
+The current algorithm is deterministic lexical ranking. It does **not** claim BM25 equivalence, semantic/vector search, embeddings, trained relevance models, indexing persistence, distributed search, personalization, production capacity, HA, or production deployment. Those require separate implementation and evidence.
 
-## 🌟 Overview
-**TypeScript-Search-Ranker** is a professional-grade project within the **SkyCoin4444** ecosystem. It focuses on delivering high-value solutions in the domain of **TypeScript, JavaScript**.
+## SKYCOIN4444 integration role
 
-## 🚀 Key Features
-- **Scalable Architecture**: Designed for enterprise-level growth and performance.
-- **Modern Standards**: Implements best practices for clean code and maintainability.
-- **Robust Integration**: Built to work seamlessly within modern cloud-native environments.
+Use as a bounded ranking primitive behind search/discovery workflows where deterministic local scoring is appropriate. Large-scale indexing and semantic retrieval belong in separate services.
 
-## 🛠️ Technology Stack
-- **Primary Domain**: TypeScript, JavaScript
-- **Ecosystem**: SkyCoin4444 Digital Platform
+## License
 
-## 📂 Structure
-The project is organized into a modular structure to ensure clarity and ease of development.
-
-## 👨‍💻 Author
-**Skyler Blue Spillers**
-*Professional Chess Player & Software Engineer*
-
----
-*Powered by SkyCoin4444*
+See `LICENSE`.
